@@ -101,7 +101,7 @@ for item in random_forest_classifier(x_train, y_train, x_test, y_test, parameter
 
 #%% XGBoost functionality w/ train test validation split
 
-#Run XGBoost model to perform enseble learning
+#Run XGBoost model to perform ensemble learning
 
 #Train-test-validation split using train test split
 X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.25)
