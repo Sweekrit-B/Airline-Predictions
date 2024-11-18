@@ -127,3 +127,45 @@ print(xg_class_report)
 print(xg_mae)
 print(xg_accuracy)
 print(xg_cf_matrix)
+
+#%%
+
+n_estimators = np.arange(50, 500, 25)
+estimators_df = pd.DataFrame(columns=['N Estimators', 'MAE', 'Accuracy'])
+
+for i in n_estimators:
+    model = RandomForestClassifier(n_estimators=i)
+    model.fit(x_train, y_train)
+    predictions = model.predict(x_test)
+    mae = mean_absolute_error(y_test, predictions)
+    accuracy = accuracy_score(y_test, predictions)
+
+    row = [i, mae, accuracy]
+    print(row)
+    estimators_df.loc[len(estimators_df.index)] = row
+
+#%%
+
+estimators_df.plot(x='N Estimators', y = 'Accuracy', kind='line', legend=True)
+estimators_df.plot(x='N Estimators', y = 'MAE', kind='line', legend=True)
+
+#%%
+
+depths = np.arange(10, 101, 10)
+depths_df = pd.DataFrame(columns=['Max Depth', 'MAE', 'Accuracy'])
+
+for i in depths:
+    model = RandomForestClassifier(max_depth=i)
+    model.fit(x_train, y_train)
+    predictions = model.predict(x_test)
+    mae = mean_absolute_error(y_test, predictions)
+    accuracy = accuracy_score(y_test, predictions)
+
+    row = [i, mae, accuracy]
+    print(row)
+    depths_df.loc[len(depths_df.index)] = row
+
+#%%
+
+depths_df.plot(x='Max Depth', y = 'Accuracy', kind='line', legend=True)
+depths_df.plot(x='Max Depth', y = 'MAE', kind='line', legend=True)

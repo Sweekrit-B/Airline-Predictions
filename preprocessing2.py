@@ -68,7 +68,7 @@ imputed_x_test = pd.DataFrame(simple_imputer.transform(x_test))
 imputed_x_train.columns = x_train.columns
 imputed_x_test.columns = x_test.columns
 
-#%% Randrom Forest model
+#%% Random Forest model
 
 #Creates a simple RF model and determines feature importance - yet to put in parameter tuning
 
@@ -108,7 +108,7 @@ xg_class_report = classification_report(y_test, xg_predictions)
 feature_importances = xg_model.feature_importances_
 xg_importance_df = pd.DataFrame({'Feature Names': imputed_x_train.columns, 'Importance': feature_importances}).sort_values(by='Importance', ascending=False)
 xg_importance_plot = xg_importance_df.plot(kind='barh', x='Feature Names', y='Importance', legend=False, figsize=(15, 10))
-plt.title(f'Feature Importances in Random Forest, with Accuracy {xg_accuracy*100:.2f}% and MAE {xg_mae:.2f}')
+plt.title(f'Feature Importances in XGBoost, with Accuracy {xg_accuracy*100:.2f}% and MAE {xg_mae:.2f}')
 for i, v in enumerate(xg_importance_df['Importance']):
     xg_importance_plot.text(v + 0.0, i, f'{v:.4f}', va='center')
 
