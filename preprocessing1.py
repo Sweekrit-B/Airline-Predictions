@@ -16,7 +16,7 @@ from sklearn.model_selection import train_test_split
 
 #Plotting and metrics imports
 import matplotlib.pyplot as plt
-from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matrix, classification_report
+from sklearn.metrics import mean_absolute_error, accuracy_score, confusion_matrix, classification_report, ConfusionMatrixDisplay
 
 #Random forest imports
 from sklearn.ensemble import RandomForestClassifier
@@ -65,7 +65,6 @@ parameters_rf = {
     'n_estimators': [50, 100, 150],
     'max_depth': [None, 10, 20, 30],
     'bootstrap': [True, False]
-
 }
 
 #Function for random forest classifier
@@ -78,21 +77,24 @@ def random_forest_classifier(x_train, y_train, x_test, y_test, parameters):
 
     #Provides predictions and determines key values
     predictions = best_model.predict(x_test)
-    mae = mean_absolute_error(y_test, predictions)
     accuracy = accuracy_score(y_test, predictions)
     cf_matrix = confusion_matrix(y_test, predictions)
     class_report = classification_report(y_test, predictions)
+
+    cf_display = ConfusionMatrixDisplay(confusion_matrix=xg_cf_matrix)
+    cf_display.plot(cmap='Blues')
+    plt.show()
 
     #Determines feature importance + plots
     feature_importances = best_model.feature_importances_
     importance_df = pd.DataFrame({'Feature Names': x_train.columns, 'Importance': feature_importances}).sort_values(by='Importance', ascending=False)
     importance_plot = importance_df.plot(kind='barh', x='Feature Names', y='Importance', legend=False, figsize=(15, 10))
-    plt.title(f'Feature Importances in Random Forest, with Accuracy {accuracy*100:.2f}% and MAE {mae:.2f}')
+    plt.title(f'Feature Importances in Random Forest, with Accuracy {accuracy*100:.2f}%')
     for i, v in enumerate(importance_df['Importance']):
         importance_plot.text(v + 0.0, i, f'{v:.4f}', va='center')
     
     #returns key values
-    return best_model, mae, accuracy, cf_matrix, class_report
+    return best_model, accuracy, cf_matrix, class_report
 
 #Returns all the items in random_forest_classifier in a clean format
 for item in random_forest_classifier(x_train, y_train, x_test, y_test, parameters_rf):
@@ -115,12 +117,17 @@ xg_accuracy = accuracy_score(y_test, xg_predictions)
 xg_cf_matrix = confusion_matrix(y_test, xg_predictions)
 xg_class_report = classification_report(y_test, xg_predictions)
 
+cf_display = ConfusionMatrixDisplay(confusion_matrix=xg_cf_matrix)
+cf_display.plot(cmap='Blues')
+plt.show()
+
 feature_importances = xg_model.feature_importances_
 xg_importance_df = pd.DataFrame({'Feature Names': x_train.columns, 'Importance': feature_importances}).sort_values(by='Importance', ascending=False)
 xg_importance_plot = xg_importance_df.plot(kind='barh', x='Feature Names', y='Importance', legend=False, figsize=(15, 10))
 plt.title(f'Feature Importances in Random Forest, with Accuracy {xg_accuracy*100:.2f}% and MAE {xg_mae:.2f}')
 for i, v in enumerate(xg_importance_df['Importance']):
     xg_importance_plot.text(v + 0.0, i, f'{v:.4f}', va='center')
+plt.show()
 
 #Prints relevant information
 print(xg_class_report)
